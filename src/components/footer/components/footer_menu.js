@@ -1,7 +1,7 @@
 function FooterMenu(props) {
   console.log(">>FOOTER MENU PROPS", props);
 
-  if(props.loading=== true ){
+  if(props.loading === true ){
     return(
     <div className="col-6 col-md">
       <img src="images/loading.gif"/>
