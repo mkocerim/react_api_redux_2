@@ -12,15 +12,9 @@ const reducersContainer={
     categoriesState: categoriesReducer
 }
 
-console.log('>> REDUCERSCONTAINER', reducersContainer)
+console.log('>> REDUCERS CONTAINER', reducersContainer)
 
-const reducersContainer2={
-    authReducer,
-    appDataReducer,
-    categoriesReducer
-}
 
-console.log('>> REDUCERSCONTAINER2', reducersContainer2)
 
 const reducers= combineReducers(reducersContainer)
 

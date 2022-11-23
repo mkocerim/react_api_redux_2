@@ -32,4 +32,4 @@ const reducer = (state=initialState,action)=>{
 // export default store
 
 
-export default createStore(reducer)
+export default reducer
