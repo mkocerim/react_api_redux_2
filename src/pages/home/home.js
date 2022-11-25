@@ -1,121 +1,123 @@
-function Home () {
+import { useEffect, useState } from "react";
+import Loading from "../../components/footer/components/loading";
+import useApi from "../../Hooks/useApi";
+import CategoryBox from "./components/category_Box";
 
+function Home() {
+  const api = useApi();
+  const [categories, setCategries] = useState(null);
 
-    return(
-        <main>
-    <div className="row row-cols-1 row-cols-md-3 mb-3 text-center">
-      <div className="col">
-        <div className="card mb-4 rounded-3 shadow-sm">
-          <div className="card-header py-3">
-            <h4 className="my-0 fw-normal">Free</h4>
-          </div>
-          <div className="card-body">
-            <h1 className="card-title pricing-card-title">$0<small className="text-muted fw-light">/mo</small></h1>
-            <ul className="list-unstyled mt-3 mb-4">
-              <li>10 users included</li>
-              <li>2 GB of storage</li>
-              <li>Email support</li>
-              <li>Help center access</li>
-            </ul>
-            <button type="button" className="w-100 btn btn-lg btn-outline-primary">Sign up for free</button>
-          </div>
+  //pagination States
+
+  const [pageLength, setPageLength] = useState(6);
+  const [pageStart, setPageStart] = useState(0);
+  const [totalPAgeCount, setTotalPAgeCount] = useState(0);
+
+  useEffect(() => {
+    getCategoryPage(pageLength, pageStart);
+  }, []);
+
+  useEffect(() => {
+    getCategoryPage(pageLength, pageStart);
+  }, [pageLength, pageStart]);
+
+  const getCategoryPage = (length, start) => {
+    api
+      .get("/public/categories/listMainCategories", {
+        params: { length, start },
+      })
+      .then((result) => {
+        console.log(">>API RESULT", result);
+        setCategries(result.data.data);
+
+        //Toplam Satır sayısı:23
+        //Sayfa basına satır sayısı: 6
+        // Toplam Sayfa Sayısı Math.ceil(23/6)
+
+        //Math.round(0.1) =0  Math.round(0.5)=1 Math.floor(0.9)=0 Math.ceil(0.1)=1
+        setTotalPAgeCount(
+          Math.ceil(parseInt(result.data.recordsTotal) / pageLength)
+        );
+      })
+      .catch((err) => {
+        console.error(">>API ERROR", err);
+      });
+  };
+
+  let categoriesArray = [];
+
+  if (categories) {
+    //kategori listesini componentlere ekle
+    categories.map((item, index) => {
+      categoriesArray.push(
+        <CategoryBox
+          key={index}
+          id={item.id}
+          name={item.name}
+          href={`#/category/${item.slug}`}
+          image={item.image}
+        />
+      );
+    });
+  } else {
+    //loading ekranı göster
+    categoriesArray.push(<Loading key="0" />);
+  }
+
+  const pageComponents = [];
+
+  for (let i = 0; i < totalPAgeCount; i++) {
+    pageComponents.push(
+      <button
+        key={i}
+        onClick={() => setPageStart(i*pageLength)}
+        className="btn btn-sm btn-primary mx-2"
+      >
+        {i}
+      </button>
+    );
+  }
+
+  const lengthSelectComponents = [];
+  for (let i = 0; i < 3; i++) {
+    lengthSelectComponents.push(
+      <button
+        key={i}
+        onClick={() => setPageLength((i + 1) * 3)}
+        className="btn btn-primary mx-2"
+      >
+        {(i + 1) * 3}
+      </button>
+    );
+  }
+
+  return (
+    <main>
+      <div className="row  mb-3 text-center">
+        <div className="col">
+          <h2>
+            {" "}
+            Page Count:
+            {totalPAgeCount}
+          </h2>
+          <br />
+          Pages:
+          {pageComponents}
+          <br />
+          Rows:
+          {lengthSelectComponents}
         </div>
       </div>
-      <div className="col">
-        <div className="card mb-4 rounded-3 shadow-sm">
-          <div className="card-header py-3">
-            <h4 className="my-0 fw-normal">Pro</h4>
-          </div>
-          <div className="card-body">
-            <h1 className="card-title pricing-card-title">$15<small className="text-muted fw-light">/mo</small></h1>
-            <ul className="list-unstyled mt-3 mb-4">
-              <li>20 users included</li>
-              <li>10 GB of storage</li>
-              <li>Priority email support</li>
-              <li>Help center access</li>
-            </ul>
-            <button type="button" className="w-100 btn btn-lg btn-primary">Get started</button>
-          </div>
-        </div>
+
+      <div className="row row-cols-1 row-cols-md-3 mb-3 text-center">
+        {categoriesArray}
       </div>
-      <div className="col">
-        <div className="card mb-4 rounded-3 shadow-sm border-primary">
-          <div className="card-header py-3 text-white bg-primary border-primary">
-            <h4 className="my-0 fw-normal">Enterprise</h4>
-          </div>
-          <div className="card-body">
-            <h1 className="card-title pricing-card-title">$29<small className="text-muted fw-light">/mo</small></h1>
-            <ul className="list-unstyled mt-3 mb-4">
-              <li>30 users included</li>
-              <li>15 GB of storage</li>
-              <li>Phone and email support</li>
-              <li>Help center access</li>
-            </ul>
-            <button type="button" className="w-100 btn btn-lg btn-primary">Contact us</button>
-          </div>
-        </div>
-      </div>
-    </div>
 
-    <h2 className="display-6 text-center mb-4">Compare plans</h2>
+      <h2 className="display-6 text-center mb-4">BLOGS</h2>
 
-    <div className="table-responsive">
-      <table className="table text-center">
-        <thead>
-          <tr>
-            <th style={{width: '34'}}></th>
-            <th style={{width:'22'}}>Free</th>
-            <th style={{width: '22'}}>Pro</th>
-            <th style={{width: '22'}}>Enterprise</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <th scope="row" className="text-start">Public</th>
-            <td><svg className="bi" width="24" height="24"><use href="#check"></use></svg></td>
-            <td><svg className="bi" width="24" height="24"><use href="#check"></use></svg></td>
-            <td><svg className="bi" width="24" height="24"><use href="#check"></use></svg></td>
-          </tr>
-          <tr>
-            <th scope="row" className="text-start">Private</th>
-            <td></td>
-            <td><svg className="bi" width="24" height="24"><use href="#check"></use></svg></td>
-            <td><svg className="bi" width="24" height="24"><use href="#check"></use></svg></td>
-          </tr>
-        </tbody>
-
-        <tbody>
-          <tr>
-            <th scope="row" className="text-start">Permissions</th>
-            <td><svg className="bi" width="24" height="24"><use href="#check"></use></svg></td>
-            <td><svg className="bi" width="24" height="24"><use href="#check"></use></svg></td>
-            <td><svg className="bi" width="24" height="24"><use href="#check"></use></svg></td>
-          </tr>
-          <tr>
-            <th scope="row" className="text-start">Sharing</th>
-            <td></td>
-            <td><svg className="bi" width="24" height="24"><use href="#check"></use></svg></td>
-            <td><svg className="bi" width="24" height="24"><use href="#check"></use></svg></td>
-          </tr>
-          <tr>
-            <th scope="row" className="text-start">Unlimited members</th>
-            <td></td>
-            <td><svg className="bi" width="24" height="24"><use href="#check"></use></svg></td>
-            <td><svg className="bi" width="24" height="24"><use href="#check"></use></svg></td>
-          </tr>
-          <tr>
-            <th scope="row" className="text-start">Extra security</th>
-            <td></td>
-            <td></td>
-            <td><svg className="bi" width="24" height="24"><use href="#check"></use></svg></td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-  </main>
-    )
-
-
+      <div className="table-responsive">Buraya Bloglar Gelsin</div>
+    </main>
+  );
 }
 
-export default Home
+export default Home;

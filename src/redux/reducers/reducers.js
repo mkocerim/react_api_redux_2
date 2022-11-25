@@ -12,9 +12,7 @@ const reducersContainer={
     categoriesState: categoriesReducer
 }
 
-console.log('>> REDUCERS CONTAINER', reducersContainer)
-
-
+console.log('>> REDUCER SCONTAINER', reducersContainer)
 
 const reducers= combineReducers(reducersContainer)
 
