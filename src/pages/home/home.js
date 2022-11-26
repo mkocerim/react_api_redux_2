@@ -1,5 +1,6 @@
-import { useEffect, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 import Loading from "../../components/footer/components/loading";
+import Pagination from "../../components/pagination/pagination";
 import useApi from "../../Hooks/useApi";
 import CategoryBox from "./components/category_Box";
 
@@ -11,7 +12,7 @@ function Home() {
 
   const [pageLength, setPageLength] = useState(6);
   const [pageStart, setPageStart] = useState(0);
-  const [totalPAgeCount, setTotalPAgeCount] = useState(0);
+  const [totalPageCount, setTotalPageCount] = useState(0);
 
   useEffect(() => {
     getCategoryPage(pageLength, pageStart);
@@ -35,7 +36,7 @@ function Home() {
         // Toplam Sayfa Sayısı Math.ceil(23/6)
 
         //Math.round(0.1) =0  Math.round(0.5)=1 Math.floor(0.9)=0 Math.ceil(0.1)=1
-        setTotalPAgeCount(
+        setTotalPageCount(
           Math.ceil(parseInt(result.data.recordsTotal) / pageLength)
         );
       })
@@ -66,11 +67,11 @@ function Home() {
 
   const pageComponents = [];
 
-  for (let i = 0; i < totalPAgeCount; i++) {
+  for (let i = 0; i < totalPageCount; i++) {
     pageComponents.push(
       <button
         key={i}
-        onClick={() => setPageStart(i*pageLength)}
+        onClick={() => setPageStart(i * pageLength)}
         className="btn btn-sm btn-primary mx-2"
       >
         {i}
@@ -93,29 +94,12 @@ function Home() {
 
   return (
     <main>
-      <div className="row  mb-3 text-center">
-        <div className="col">
-          <h2>
-            {" "}
-            Page Count:
-            {totalPAgeCount}
-          </h2>
-          <br />
-          Pages:
-          {pageComponents}
-          <br />
-          Rows:
-          {lengthSelectComponents}
-        </div>
-      </div>
+      <Pagination
+        remoteURL="/public/categories/listMainCategories"
+        title="Categories"
+      />
 
-      <div className="row row-cols-1 row-cols-md-3 mb-3 text-center">
-        {categoriesArray}
-      </div>
-
-      <h2 className="display-6 text-center mb-4">BLOGS</h2>
-
-      <div className="table-responsive">Buraya Bloglar Gelsin</div>
+      
     </main>
   );
 }
