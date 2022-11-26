@@ -25,6 +25,7 @@ function Pagination(props){
   
 
     //"/public/categories/listMainCategories"
+    
     const getRowsFromApi = (length, start) => {
       api
         .get(props.remoteUrl, {params: { length, start },
@@ -46,25 +47,26 @@ function Pagination(props){
           console.error(">>API ERROR", err);
         });
     };
-    let rowsArray = [];
+    let rowArray = [];
 
   if (rows) {
     //kategori listesini componentlere ekle
     rows.map((item, index) => {
-      rowsArray.push(
+      rowArray.push(
         <Box
           key={index}
           id={item.id}
           name={item.name}
           href={`#/category/${item.slug}`}
           image={item.image}
-        />
-      );
+        />,
+      )
     });
   } else {
     //loading ekranı göster
-    rowsArray.push(<Loading key="0" />);
+    rowArray.push(<Loading key="0" />);
   }
+
   const pageComponents = [];
 
   for (let i = 0; i < totalPageCount; i++) {
@@ -100,8 +102,9 @@ function Pagination(props){
       <div className="row  mb-3 text-center">
         <div className="col">
           <h2>
-            {" "}
+            
             Page Count:
+            &nbsp;
             {totalPageCount}
           </h2>
           <br />
@@ -113,7 +116,7 @@ function Pagination(props){
         </div>
       </div>
       <div className="row row-cols-1 row-cols-md-3 mb-3 text-center">
-        {rowsArray}
+        {rowArray}
       </div>
         </Fragment>
     )

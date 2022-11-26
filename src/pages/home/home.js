@@ -1,4 +1,4 @@
-import { Fragment, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import Loading from "../../components/footer/components/loading";
 import Pagination from "../../components/pagination/pagination";
 import useApi from "../../Hooks/useApi";
@@ -45,12 +45,12 @@ function Home() {
       });
   };
 
-  let categoriesArray = [];
+  let categoryArray = [];
 
   if (categories) {
     //kategori listesini componentlere ekle
     categories.map((item, index) => {
-      categoriesArray.push(
+      categoryArray.push(
         <CategoryBox
           key={index}
           id={item.id}
@@ -62,13 +62,15 @@ function Home() {
     });
   } else {
     //loading ekranı göster
-    categoriesArray.push(<Loading key="0" />);
+    categoryArray.push(<Loading key="0" />);
   }
 
   const pageComponents = [];
 
   for (let i = 0; i < totalPageCount; i++) {
+   
     pageComponents.push(
+      
       <button
         key={i}
         onClick={() => setPageStart(i * pageLength)}
@@ -81,7 +83,10 @@ function Home() {
 
   const lengthSelectComponents = [];
   for (let i = 0; i < 3; i++) {
+    
     lengthSelectComponents.push(
+      
+      
       <button
         key={i}
         onClick={() => setPageLength((i + 1) * 3)}
@@ -95,8 +100,9 @@ function Home() {
   return (
     <main>
       <Pagination
-        remoteURL="/public/categories/listMainCategories"
+        remoteUrl="/public/categories/listMainCategories"
         title="Categories"
+        
       />
 
       
