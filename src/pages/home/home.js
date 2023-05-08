@@ -68,9 +68,7 @@ function Home() {
   const pageComponents = [];
 
   for (let i = 0; i < totalPageCount; i++) {
-   
     pageComponents.push(
-      
       <button
         key={i}
         onClick={() => setPageStart(i * pageLength)}
@@ -83,10 +81,7 @@ function Home() {
 
   const lengthSelectComponents = [];
   for (let i = 0; i < 3; i++) {
-    
     lengthSelectComponents.push(
-      
-      
       <button
         key={i}
         onClick={() => setPageLength((i + 1) * 3)}
@@ -102,10 +97,7 @@ function Home() {
       <Pagination
         remoteUrl="/public/categories/listMainCategories"
         title="Categories"
-        
       />
-
-      
     </main>
   );
 }
