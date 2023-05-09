@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import Loading from "../../components/footer/components/loading";
+import Loading from "../../components/loading";
 import Pagination from "../../components/pagination/pagination";
 import useApi from "../../Hooks/useApi";
 import CategoryBox from "./components/category_Box";
@@ -55,7 +55,7 @@ function Home() {
           key={index}
           id={item.id}
           name={item.name}
-          href={`#/category/${item.slug}`}
+          href={`#/category/${item.slug}`} // href={#category/+item.slug}
           image={item.image}
         />
       );
@@ -98,6 +98,8 @@ function Home() {
         remoteUrl="/public/categories/listMainCategories"
         title="Categories"
       />
+
+      <Pagination remoteUrl="/public/blogs/list?status=active&" title="Blogs" />
     </main>
   );
 }

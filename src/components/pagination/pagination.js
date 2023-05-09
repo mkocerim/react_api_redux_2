@@ -1,53 +1,49 @@
 import useApi from "../../Hooks/useApi";
 import { Fragment, useEffect, useState } from "react";
 import Box from "./box";
-import Loading from "../footer/components/loading";
+import Loading from "../loading";
 
+function Pagination(props) {
+  console.log(">>PAGINATION PROPS", props);
 
-function Pagination(props){
+  const api = useApi();
+  const [rows, setRows] = useState(null);
 
-    console.log('>>PAGINATION PROPS',props)
+  const [pageLength, setPageLength] = useState(6);
+  const [pageStart, setPageStart] = useState(0);
+  const [totalPageCount, setTotalPageCount] = useState(0);
 
-    const api = useApi();
-    const [rows, setRows] = useState(null);
-    
-    const [pageLength, setPageLength] = useState(6);
-    const [pageStart, setPageStart] = useState(0);
-    const [totalPageCount, setTotalPageCount] = useState(0);
-  
-    useEffect(() => {
-      getRowsFromApi(pageLength, pageStart);
-    }, []);
-  
-    useEffect(() => {
-      getRowsFromApi(pageLength, pageStart);
-    }, [pageLength, pageStart]);
-  
+  useEffect(() => {
+    getRowsFromApi(pageLength, pageStart);
+  }, []);
 
-    //"/public/categories/listMainCategories"
-    
-    const getRowsFromApi = (length, start) => {
-      api
-        .get(props.remoteUrl, {params: { length, start },
-        })
-        .then((result) => {
-          console.log(">>API RESULT", result);
-          setRows(result.data.data);
-  
-          //Toplam Satır sayısı:23
-          //Sayfa basına satır sayısı: 6
-          // Toplam Sayfa Sayısı Math.ceil(23/6)
-  
-          //Math.round(0.1) =0  Math.round(0.5)=1 Math.floor(0.9)=0 Math.ceil(0.1)=1
-          setTotalPageCount(
-            Math.ceil(parseInt(result.data.recordsTotal) / pageLength)
-          );
-        })
-        .catch((err) => {
-          console.error(">>API ERROR", err);
-        });
-    };
-    let rowArray = [];
+  useEffect(() => {
+    getRowsFromApi(pageLength, pageStart);
+  }, [pageLength, pageStart]);
+
+  //"/public/categories/listMainCategories"
+
+  const getRowsFromApi = (length, start) => {
+    api
+      .get(props.remoteUrl, { params: { length, start } })
+      .then((result) => {
+        console.log(">>API RESULT", result);
+        setRows(result.data.data);
+
+        //Toplam Satır sayısı:23
+        //Sayfa basına satır sayısı: 6
+        // Toplam Sayfa Sayısı Math.ceil(23/6)
+
+        //Math.round(0.1) =0  Math.round(0.5)=1 Math.floor(0.9)=0 Math.ceil(0.1)=1
+        setTotalPageCount(
+          Math.ceil(parseInt(result.data.recordsTotal) / pageLength)
+        );
+      })
+      .catch((err) => {
+        console.error(">>API ERROR", err);
+      });
+  };
+  let rowArray = [];
 
   if (rows) {
     //kategori listesini componentlere ekle
@@ -59,8 +55,8 @@ function Pagination(props){
           name={item.name}
           href={`#/category/${item.slug}`}
           image={item.image}
-        />,
-      )
+        />
+      );
     });
   } else {
     //loading ekranı göster
@@ -73,7 +69,7 @@ function Pagination(props){
     pageComponents.push(
       <button
         key={i}
-        onClick={() => setPageStart(i*pageLength)}
+        onClick={() => setPageStart(i * pageLength)}
         className="btn btn-sm btn-primary mx-2"
       >
         {i}
@@ -94,17 +90,14 @@ function Pagination(props){
     );
   }
 
-
-    return(
-        <Fragment>
-       <h2 className="display-6 text-center mb-4">{props.title}</h2>
+  return (
+    <Fragment>
+      <h2 className="display-6 text-center mb-4">{props.title}</h2>
 
       <div className="row  mb-3 text-center">
         <div className="col">
           <h2>
-            
-            Page Count:
-            &nbsp;
+            Page Count: &nbsp;
             {totalPageCount}
           </h2>
           <br />
@@ -118,9 +111,7 @@ function Pagination(props){
       <div className="row row-cols-1 row-cols-md-3 mb-3 text-center">
         {rowArray}
       </div>
-        </Fragment>
-    )
-        
-    
+    </Fragment>
+  );
 }
-export default Pagination
+export default Pagination;
